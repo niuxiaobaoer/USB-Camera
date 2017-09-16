@@ -1,0 +1,65 @@
+diff a/CCTAPI/CCTAPI.h b/CCTAPI/CCTAPI.h	(rejected hunks)
+@@ -4,13 +4,13 @@
+ #pragma once
+ 
+ #ifndef __AFXWIN_H__
+-	#error "include 'stdafx.h' before including this file for PCH"
++#error "include 'stdafx.h' before including this file for PCH"
+ #endif
+ 
+ #ifdef COMPILE_API
+-	#define CCT_API __declspec(dllexport) 
++#define CCT_API __declspec(dllexport) 
+ #else 
+-	#define CCT_API __declspec(dllimport)
++#define CCT_API __declspec(dllimport)
+ #endif
+ 
+ #include "resource.h"		// main symbols
+@@ -19,24 +19,35 @@
+ // CCCTAPIApp
+ // See CCTAPI.cpp for the implementation of this class
+ //
++class ICCTAPI{
++public:
++	virtual void destory()=0;
++	virtual int startCap(int height,int width,LPMV_CALLBACK2 CallBackFunc,int devNum)=0;
++	virtual int stopCap()=0;
++	virtual int setMirrorType(DataProcessType mirrortype)=0;
++	virtual int getUSBDeviceCnt()=0;
++	//virtual void  CCCTAPIApp()=0;
++};
+ 
+-class CCT_API CCCTAPIApp : public CWinApp
++class  CCCTAPIApp :public CWinApp// //public ICCTAPI,
+ {
+ public:
+-	 CCCTAPIApp();
+-	int startCap(int height,int width,LPMV_CALLBACK2 CallBackFunc);
+-	int stopCap();
+-// Overrides
++	CCCTAPIApp();
++	CCT_API int startCap(int height,int width,LPMV_CALLBACK2 CallBackFunc,int devNum);
++	CCT_API int stopCap();
++	CCT_API int setMirrorType(DataProcessType mirrortype);
++	CCT_API int getUSBDeviceCnt();
++	void destory();
++	// Overrides
+ public:
+ 	virtual BOOL InitInstance();
+ 	DECLARE_MESSAGE_MAP()
+-private:
+-	BOOL m_bCapture;
+-	BOOL	m_bUsbOpen;
+ 
++private:
+ 	char*         m_pReadBuff;
+ 	long          m_lBytePerSecond;
+-	bool b_opened;
+-	bool b_closed;
+-	
++
++
+ };
++
++extern "C" __declspec(dllexport)  ICCTAPI * APIENTRY   create_CCTAPI();
