@@ -15,11 +15,9 @@
 
 #include "resource.h"		// main symbols
 #include "DataCapture.h"
-#include "DataProcess.h"
 #include "CyUsb.h"
 
-
-class CCT_API CCCTAPIApp //:public CWinApp// //public ICCTAPI,
+class  CCT_API CCCTAPIApp :public CWinApp// //public ICCTAPI,
 {
 public:
 	CCCTAPIApp();
@@ -51,15 +49,25 @@ public:
 	void SetBitDepth(unsigned char chDepthType);
 	void destory();
 // Overrides
-public:
-	//virtual BOOL InitInstance();
-	//DECLARE_MESSAGE_MAP()
+
 
 private:
-	CDataProcess* m_pDataProcess;
-	CDataCapture*  m_pDataCapture;
+	char*         m_pReadBuff;
+	//long          m_lBytePerSecond;
+	bool m_bUsbOpen;
+	//added by qbc
+
+	CDataProcess *m_pDataProcess;
+	CDataCapture *m_pDataCapture;
 	bool m_bOpened;
 	bool m_bClosed;
 
+	//BYTE          m_byData[64];
+	//USB_ORDER     m_sUsbOrder;
+
+
+
+	
+	
 };
 

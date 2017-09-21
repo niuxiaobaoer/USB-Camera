@@ -2,7 +2,7 @@
 #include "CyUsb.h"
 
 #include "CyAPI.h"
-#pragma comment(lib,"CyAPI.lib")
+//#pragma comment(lib,"CyAPI.lib")
 
 #include "EZUSBSYS.H"
 

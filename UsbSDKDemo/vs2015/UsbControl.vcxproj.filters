@@ -59,9 +59,4 @@
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="CyUsb.lib">
-      <Filter>lib</Filter>
-    </Library>
-  </ItemGroup>
 </Project>
