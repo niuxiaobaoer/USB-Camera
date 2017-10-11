@@ -197,15 +197,51 @@ unsigned char  CCCTAPIApp::RdFpgaReg(unsigned char iAddr)
 }
 void  CCCTAPIApp::InitSensor(void)
 {
-	USB_ORDER m_sUsbOrder;
-	BYTE  m_byData[64];
-	m_sUsbOrder.pData=m_byData;
+	//USB_ORDER m_sUsbOrder;
+	//BYTE  m_byData[64];
+	//m_sUsbOrder.pData=m_byData;
 
-	m_sUsbOrder.ReqCode = 0xF0;
-	m_sUsbOrder.DataBytes = 2;
-	m_sUsbOrder.Direction = 0;
+	//m_sUsbOrder.ReqCode = 0xF0;
+	//m_sUsbOrder.DataBytes = 2;
+	//m_sUsbOrder.Direction = 0;
 
-	SendOrder(&m_sUsbOrder);
+	//SendOrder(&m_sUsbOrder);
+
+
+	WrSensorReg(0x3028,0x0010);//0		ROW_SPEED = 16
+	WrSensorReg(0x302A,0x000C);//1		VT_PIX_CLK_DIV = 12   P2   4<=P2<=16
+	WrSensorReg(0x302C,0x0001);//2		VT_SYS_CLK_DIV = 1    P1   1<=P1<=16
+	WrSensorReg(0x302E,0x0001);//3		PRE_PLL_CLK_DIV = 2   N    1<=N<=63
+	WrSensorReg(0x3030,0x0020);//4		PLL_MULTIPLIER = 40   M   32<=M<=255
+
+	WrSensorReg(0x3032,0x0000);//5		DIGITAL_BINNING = 0   _BINNING  帧率降一半
+	WrSensorReg(0x30B0,0x0080);//6		DIGITAL_TEST = 128
+
+	WrSensorReg(0x301A,0x00D8);//8		RESET_REGISTER = 216
+	WrSensorReg(0x301A,0x10DC);//9		RESET_REGISTER = 4316  h10DC    关键寄存器
+
+	WrSensorReg(0x3002,0x007C);//10	Y_ADDR_START = 124
+	WrSensorReg(0x3004,0x0002);//11	X_ADDR_START = 2
+	WrSensorReg(0x3006,0x034B);//12	Y_ADDR_END = 843
+	WrSensorReg(0x3008,0x0501);//13	X_ADDR_END = 1281
+
+	WrSensorReg(0x300A,0x02FD);//14	FRAME_LENGTH_LINES = 837
+	WrSensorReg(0x300C,0x056C);//15	LINE_LENGTH_PCK = 1388
+
+	WrSensorReg(0x3012,0x0080);//16	COARSE_INTEGRATION_TIME = 252	 h00FC	曝光时间
+	WrSensorReg(0x3014,0x008D);//17	FINE_INTEGRATION_TIME = 233
+
+	WrSensorReg(0x30A6,0x0001);//18	Y_ODD_INC = 1			    SKIP模式
+
+	WrSensorReg(0x3040,0x0000);//27	READ_MODE = 0			镜像等
+
+	WrSensorReg(0x3064,0x1982);//28	EMBEDDED_DATA_CTRL = 6530    开启输出 两行寄存器值 和  EMBEDDED_DATA  ，如果用AE模式 ，必须得开。图像输出时前两行不读
+
+	WrSensorReg(0x3100,0x0003);//30	AE;AG
+
+	WrSensorReg(0x305E,0x003C);//29	Total gain
+
+	WrSensorReg(0x3046,0x0100);
 	return;
 
 }
