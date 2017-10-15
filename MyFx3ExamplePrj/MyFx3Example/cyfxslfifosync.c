@@ -603,6 +603,7 @@ CyFxSlFifoApplnUSBSetupCB (
             case 0xf0://sensor initialization
             	status  = CyU3PUsbGetEP0Data(((wLength + 15) & 0xFFF0), glEp0Buffer, NULL);
 
+            	/*
             	WrSensorReg(0x20,0x3028,0x0010);//0		ROW_SPEED = 16
             	WrSensorReg(0x20,0x302A,0x000C);//1		VT_PIX_CLK_DIV = 12   P2   4<=P2<=16
             	WrSensorReg(0x20,0x302C,0x0001);//2		VT_SYS_CLK_DIV = 1    P1   1<=P1<=16
@@ -637,6 +638,7 @@ CyFxSlFifoApplnUSBSetupCB (
             	WrSensorReg(0x20,0x305E,0x003C);//29	Total gain
 
             	WrSensorReg(0x20,0x3046,0x0100);
+            	*/
                 break;
             case 0xf1:
                	status  = CyU3PUsbGetEP0Data(((wLength + 15) & 0xFFF0), glEp0Buffer, NULL);

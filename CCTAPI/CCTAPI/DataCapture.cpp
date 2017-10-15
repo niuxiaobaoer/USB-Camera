@@ -31,15 +31,15 @@ int CDataCapture::Open(CDataProcess *pProcess,int height,int width)
 	g_height=height;
 	g_width=width;
 	g_width_L=g_width;
-	ReadDataBytes=g_height*g_width;
+	ReadDataBytes=g_height*g_width+512;
 
 	m_pReadBuff=new char[ReadDataBytes];//此处应对m_pReadBuff是否分配内存成功，即是否为NULL
 	m_pOutData=new byte[(g_height*g_width_L+1)];//+1 added by qbc
-	m_pInData=new byte[(ReadDataBytes+g_width_L+3) ];
+	m_pInData=new byte[ReadDataBytes*4];
 
 	memset(m_pReadBuff, 0, ReadDataBytes  * sizeof(byte));
 	memset(m_pOutData, 0, (g_height*g_width_L + 1)  * sizeof(byte));
-	memset(m_pInData,0,(ReadDataBytes+g_width_L+3)  * sizeof(byte));//(ReadDataBytes+g_width_L+3)*sizeof(byte)等同于sizeof（m_pInData）
+	memset(m_pInData,0,(ReadDataBytes*4)  * sizeof(byte));//(ReadDataBytes+g_width_L+3)*sizeof(byte)等同于sizeof（m_pInData）
 	m_bCapture=TRUE;
 	m_hThread = (HANDLE)_beginthreadex(NULL,0,ThreadProcess,this,0,NULL);
 	return 0;
@@ -95,9 +95,26 @@ int CDataCapture::Input( const LPVOID lpData,const DWORD dwSize )
 {
 	int iBytes=0;
 	iBytes=dwSize+m_iCount;//m_iCount上一次拷贝剩余数据
+	bool b_header=false,b_imu=false;
 	memcpy(m_pInData+m_iCount,lpData,dwSize);
+	int datalen=g_width*g_height;
 	for(int i=0;i<iBytes;++i)
 	{
+		if ((i + datalen) >= iBytes)
+		{
+			m_iCount = iBytes - i;
+			memcpy(m_pInData, m_pInData + i, m_iCount);
+			return 0;
+		}
+
+		if(m_pInData[i]==0x33&&m_pInData[i+1]==0xcc&&m_pInData[i+14]==0x22&&m_pInData[i+15]==0xdd&&b_header==FALSE)
+		{
+			i=i+16;
+			memcpy(m_pOutData,m_pInData+i,datalen);
+			m_pDataProcess->Input(m_pOutData,datalen);
+		}
+		
+#ifdef _USE55AA
 		if(!m_bFindDbFive)
 		{
 			if(m_pInData[i]==0x55)
@@ -133,6 +150,7 @@ int CDataCapture::Input( const LPVOID lpData,const DWORD dwSize )
 			i=i+g_width_L+2;
 		}
 		m_bFindDbFive=FALSE;//找到0x55后，无论下个数据是不是0xaa都置状态位为FALSE,然后重新找0x55
+#endif // _USE55AA
 	}
 	return 0;
 }
