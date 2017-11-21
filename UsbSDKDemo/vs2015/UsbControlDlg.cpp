@@ -542,10 +542,6 @@ void _stdcall RawCallBack(LPVOID lpParam, LPVOID lpUser)
 			cv::vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(0);    // 无压缩png.  
-			//sprintf(fileName, "Picture %d.png", ++countCamera); //生成文件名  
-			//cv::Mat pImgMat(pImg, 0);  //把IplImage转换为Mat  
-			//imwrite(fileName, pImgMat, compression_params);  //保存图片</span>  
-
 
 			cv::imwrite(cvfilename,frame, g_byteBitDepthNo == 1 ? compression_params: std::vector<int>());
 			snap=false;

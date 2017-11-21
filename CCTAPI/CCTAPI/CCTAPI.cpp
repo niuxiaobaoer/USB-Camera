@@ -195,19 +195,21 @@ unsigned char  CCCTAPIApp::RdFpgaReg(unsigned char iAddr)
 	UINT8 irxval = rxval[0];
 	return irxval;
 }
+#define FIRMWARE_OLD
 void  CCCTAPIApp::InitSensor(void)
 {
-	//USB_ORDER m_sUsbOrder;
-	//BYTE  m_byData[64];
-	//m_sUsbOrder.pData=m_byData;
+#ifdef FIRMWARE_OLD
+	USB_ORDER m_sUsbOrder;
+	BYTE  m_byData[64];
+	m_sUsbOrder.pData=m_byData;
 
-	//m_sUsbOrder.ReqCode = 0xF0;
-	//m_sUsbOrder.DataBytes = 2;
-	//m_sUsbOrder.Direction = 0;
+	m_sUsbOrder.ReqCode = 0xF0;
+	m_sUsbOrder.DataBytes = 2;
+	m_sUsbOrder.Direction = 0;
 
-	//SendOrder(&m_sUsbOrder);
+	SendOrder(&m_sUsbOrder);
 
-
+#else
 	WrSensorReg(0x3028,0x0010);//0		ROW_SPEED = 16
 	WrSensorReg(0x302A,0x000C);//1		VT_PIX_CLK_DIV = 12   P2   4<=P2<=16
 	WrSensorReg(0x302C,0x0001);//2		VT_SYS_CLK_DIV = 1    P1   1<=P1<=16
@@ -242,6 +244,7 @@ void  CCCTAPIApp::InitSensor(void)
 	WrSensorReg(0x305E,0x003C);//29	Total gain
 
 	WrSensorReg(0x3046,0x0100);
+#endif// FIRMWARE_OLD
 	return;
 
 }
